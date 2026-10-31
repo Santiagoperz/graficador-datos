@@ -30,14 +30,17 @@ Los colores se pueden cambiar desde la franja "Colores de las gráficas", y cada
 | `index.html` | Estructura de la página |
 | `estilos.css` | Estilos |
 | `app.js` | Lectura de datos, estadísticas y gráficos |
+| `lib/` | Librerías incluidas: Chart.js 4.4.1 y SheetJS 0.18.5 |
+| `fonts/` | Tipografías Bricolage Grotesque e Instrument Sans |
+| `licencias/` | Licencias de las librerías y tipografías |
 
 ## Dependencias
 
-Se cargan desde un CDN, por lo que hace falta conexión a internet:
+Todo está incluido en el repositorio, así que la herramienta funciona sin conexión a internet:
 
-- [Chart.js](https://www.chartjs.org/) 4.4.1
-- [SheetJS](https://sheetjs.com/) 0.18.5 (lectura de archivos Excel)
-- Tipografías de Google Fonts (opcional; si no cargan se usan las del sistema)
+- [Chart.js](https://www.chartjs.org/) 4.4.1 (licencia MIT)
+- [SheetJS](https://sheetjs.com/) 0.18.5 (licencia Apache 2.0), para leer archivos Excel
+- Tipografías Bricolage Grotesque e Instrument Sans (licencia SIL OFL)
 
 ## Notas
 
