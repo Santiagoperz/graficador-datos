@@ -122,8 +122,11 @@ function draw(){
   Chart.defaults.color=tx;Chart.defaults.borderColor=mix(tx,bg,.85);Chart.defaults.devicePixelRatio=Math.max(2,window.devicePixelRatio||1);Chart.defaults.layout.padding=10;
   Chart.defaults.font.family='"Instrument Sans",system-ui,sans-serif';
   var L=model.labels,S=model.series,multi=S.length>1;
+  var ttl=$("#ttl").value.trim(),xt=$("#xt").value.trim(),yt=$("#yt").value.trim();
+  var T={display:!!ttl,text:ttl,font:{size:16,weight:"600"},padding:{bottom:8}};
+  function AX(t){return {display:!!t,text:t}}
   var k=+($("#sel").value||0),s=S[k]||S[0];
-  var base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:multi}}};
+  var base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:multi},title:T},scales:{x:{title:AX(xt)},y:{title:AX(yt)}}};
   function opt(extra){var o=JSON.parse(JSON.stringify(base));for(var key in extra)o[key]=extra[key];return o}
   function dsets(extra){return S.map(function(x,i){var o={label:x.name,data:x.values,backgroundColor:PAL[i%8],borderColor:PAL[i%8]};for(var key in extra)o[key]=extra[key];return o})}
 
@@ -138,11 +141,11 @@ function draw(){
   if(idx.length>=2&&idx.length<=8&&tot>0&&idx.length===clean(s.values).length)
     card("Dona","Reparto de «"+s.name+"» entre categorías (porcentaje del total).",
       {type:"doughnut",data:{labels:idx.map(function(i){return L[i]}),datasets:[{data:idx.map(function(i){return s.values[i]}),backgroundColor:idx.map(function(_,i){return PAL[i%8]}),borderColor:bg,borderWidth:2}]},
-       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"},tooltip:{callbacks:{label:function(c){return c.label+": "+f(c.parsed)+" ("+f(c.parsed/tot*100)+"%)"}}}}}});
+       options:{responsive:true,maintainAspectRatio:false,plugins:{title:T,legend:{position:"bottom"},tooltip:{callbacks:{label:function(c){return c.label+": "+f(c.parsed)+" ("+f(c.parsed/tot*100)+"%)"}}}}}});
 
   if(multi&&S.every(function(x){return clean(x.values).every(function(v){return v>=0})}))
     card("Barras apiladas","Muestra el total por categoría y cuánto aporta cada serie.",
-      {type:"bar",data:{labels:L,datasets:dsets({})},options:opt({scales:{x:{stacked:true},y:{stacked:true}}})});
+      {type:"bar",data:{labels:L,datasets:dsets({})},options:opt({scales:{x:{stacked:true,title:AX(xt)},y:{stacked:true,title:AX(yt)}}})});
 
   var fr=freq(s.values);
   if(clean(s.values).length>=3){
@@ -150,10 +153,10 @@ function draw(){
       {data:{labels:fr.map(function(b){return b.l}),datasets:[
         {type:"bar",label:"Frecuencia",data:fr.map(function(b){return b.c}),backgroundColor:PAL[0]+"cc",borderColor:bg,borderWidth:1,barPercentage:1,categoryPercentage:1,order:2},
         {type:"line",label:"Polígono",data:fr.map(function(b){return b.c}),borderColor:PAL[1],backgroundColor:PAL[1],tension:0,pointRadius:4,order:1}]},
-       options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0},title:{display:true,text:"Frecuencia"}},x:{title:{display:true,text:"Valor"}}}}});
+       options:{responsive:true,maintainAspectRatio:false,plugins:{title:T},scales:{y:{beginAtZero:true,ticks:{precision:0},title:{display:true,text:"Frecuencia"}},x:{title:{display:true,text:"Valor"}}}}});
     card("Frecuencia acumulada","Porcentaje de datos que quedan en ese valor o por debajo.",
       {type:"line",data:{labels:fr.map(function(b){return b.l}),datasets:[{label:"% acumulado",data:fr.map(function(b){return b.ra}),borderColor:PAL[2],backgroundColor:PAL[2],stepped:true,pointRadius:3}]},
-       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:function(v){return v+"%"}}}}}});
+       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:T},scales:{y:{min:0,max:100,ticks:{callback:function(v){return v+"%"}}}}}});
   }
 
   var BX=S.filter(function(x){return clean(x.values).length>=3});
@@ -163,7 +166,7 @@ function draw(){
     card("Diagrama de caja y bigotes","La caja va de Q1 a Q3 y la línea interior es la mediana. Los bigotes llegan al dato más lejano dentro de 1,5 veces el rango intercuartílico; los círculos son valores atípicos.",
       {type:"bar",
        data:{labels:BX.map(function(x){return x.name}),datasets:[{label:"Q1 a Q3",data:bs.map(function(b){return [b.q1,b.q3]}),backgroundColor:BX.map(function(x){return PAL[S.indexOf(x)%8]}),borderColor:tx,borderWidth:2,barPercentage:.5,maxBarThickness:90}]},
-       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){var b=bs[c.dataIndex],r=["Máximo (bigote): "+f(b.hi),"Q3: "+f(b.q3),"Mediana: "+f(b.med),"Q1: "+f(b.q1),"Mínimo (bigote): "+f(b.lo)];if(b.out.length)r.push("Atípicos: "+b.out.map(f).join(", "));return r}}}},scales:{y:{min:gmin-pad,max:gmax+pad}}},
+       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:T,tooltip:{callbacks:{label:function(c){var b=bs[c.dataIndex],r=["Máximo (bigote): "+f(b.hi),"Q3: "+f(b.q3),"Mediana: "+f(b.med),"Q1: "+f(b.q1),"Mínimo (bigote): "+f(b.lo)];if(b.out.length)r.push("Atípicos: "+b.out.map(f).join(", "));return r}}}},scales:{x:{title:AX(xt)},y:{min:gmin-pad,max:gmax+pad,title:AX(yt)}}},
        plugins:[{id:"cajas",afterDatasetsDraw:function(ch){
          var x=ch.ctx,ys=ch.scales.y,mt=ch.getDatasetMeta(0);
          x.save();x.lineWidth=2;
@@ -190,7 +193,7 @@ function draw(){
     S[0].values.forEach(function(x,i){var y=S[1].values[i];if(x!=null&&y!=null)pts.push({x:x,y:y})});
     if(pts.length>=3)card("Dispersión","Relación entre «"+S[0].name+"» y «"+S[1].name+"».",
       {type:"scatter",data:{datasets:[{label:S[0].name+" vs "+S[1].name,data:pts,backgroundColor:PAL[3],pointRadius:5}]},
-       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:S[0].name}},y:{title:{display:true,text:S[1].name}}}}});
+       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:T},scales:{x:{title:{display:true,text:S[0].name}},y:{title:{display:true,text:S[1].name}}}}});
   }
 }
 
@@ -306,6 +309,7 @@ function setMode(m){
 }
 $("#tabs").onclick=function(e){var m=e.target.dataset&&e.target.dataset.m;if(m){setMode(m);if(m==="tabla")later();else if(m==="archivo"&&fileRows)render();else if(m==="texto")later()}};
 function redraw(){if(model&&!$("#out").hidden)draw()}
+var tt=null;["ttl","xt","yt"].forEach(function(id){$("#"+id).addEventListener("input",function(){clearTimeout(tt);tt=setTimeout(redraw,300)})});
 if(window.matchMedia)window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",redraw);
 new MutationObserver(redraw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 function syncPal(){[].slice.call(document.querySelectorAll("#pal input")).forEach(function(i){i.value=COL[+i.dataset.c]})}
