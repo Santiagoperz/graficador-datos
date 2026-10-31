@@ -21,7 +21,7 @@ Según los datos, la herramienta muestra solo los gráficos que tienen sentido:
 - Tabla de frecuencias (absoluta, relativa y acumulada)
 - Tabla de estadísticos: media, mediana, moda, rango, cuartiles, rango intercuartílico, varianza, desviación estándar, coeficiente de variación, asimetría y valores atípicos
 
-Los colores se pueden cambiar desde la franja "Colores de las gráficas", y cada gráfica se descarga como PNG.
+Los colores se pueden cambiar desde la franja "Colores de las gráficas", y cada gráfica se descarga como PNG. También puedes escribir un título y el nombre de los ejes X e Y; aparecen dentro de la gráfica y quedan en la imagen descargada.
 
 ## Archivos
 
