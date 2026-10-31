@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Graficador de datos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="wrap">
+<h1>Graficador de datos</h1>
+<p class="lead">Pega tus datos, escríbelos en una tabla o sube un archivo. La herramienta elige los gráficos que encajan con ellos y calcula las estadísticas básicas.</p>
+
+<section class="input">
+<div class="tabs" id="tabs">
+<button data-m="texto" class="on">Pegar texto</button>
+<button data-m="tabla">Tabla</button>
+<button data-m="archivo">Archivo CSV o Excel</button>
+</div>
+
+<div id="p-texto">
+<textarea id="txt" spellcheck="false" placeholder="Semana 1 - 23&#10;Semana 2 - 26&#10;Semana 3 - 25&#10;Semana 4 - 24&#10;&#10;También sirve con comas, punto y coma o tabulaciones.&#10;Con varias series, pon una fila de títulos:&#10;Mes, Ventas, Gastos&#10;Enero, 120, 80"></textarea>
+<div class="row">
+<button class="btn" id="go">Generar gráficos</button>
+<button class="ghost" id="ex1">Ejemplo: semanas</button>
+<button class="ghost" id="ex2">Ejemplo: varias series</button>
+<button class="ghost" id="ex3">Ejemplo: datos sueltos</button>
+</div>
+</div>
+
+<div id="p-tabla" hidden>
+<div class="tablewrap"><table id="grid"></table></div>
+<div class="row">
+<button class="ghost" id="addr">Agregar fila</button>
+<button class="ghost" id="addc">Agregar serie</button>
+<button class="ghost" id="clr">Vaciar tabla</button>
+</div>
+</div>
+
+<div id="p-archivo" hidden>
+<label class="drop" id="drop">
+<input type="file" id="file" accept=".csv,.tsv,.txt,.xlsx,.xls,.ods">
+Arrastra un archivo aquí o toca para elegirlo<br><small>CSV, TXT, XLSX, XLS. Se usa la primera hoja.</small>
+</label>
+</div>
+<p class="msg" id="msg"></p>
+</section>
+
+<section id="out" hidden>
+<div class="bar"><h2>Resumen</h2>
+<label id="selw" hidden>Serie para frecuencias y dona: <select id="sel"></select></label></div>
+<div class="tw"><table class="t" id="stats"></table></div>
+<div class="pal" id="pal"><strong>Colores de las gráficas</strong>
+<label>Color 1 <input type="color" data-c="0"></label>
+<label>Color 2 <input type="color" data-c="1"></label>
+<label>Color 3 <input type="color" data-c="2"></label>
+<label>Fondo <input type="color" data-c="3"></label>
+<button class="ghost" data-p="arena">Azul y arena</button><button class="ghost" data-p="clasica">Clásica</button></div>
+<p class="nodl" style="color:var(--mut);font-size:13px;margin:8px 0 0">Para guardar una gráfica, haz clic derecho sobre ella y elige guardar imagen.</p>
+<div class="grid" id="charts"></div>
+<div class="bar"><h2>Tabla de frecuencias</h2></div>
+<div class="tw"><table class="t" id="freq"></table></div>
+</section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
